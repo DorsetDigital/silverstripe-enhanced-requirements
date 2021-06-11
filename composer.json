@@ -1,0 +1,26 @@
+{
+  "name": "dorsetdigital/silverstripe-enhanced-requirements",
+  "description": "Enhanced requirements for Silverstripe",
+  "type": "silverstripe-vendormodule",
+  "homepage": "https://github.com/DorsetDigital/silverstripe-enhanced-requirements",
+  "keywords": ["silverstripe", "html", "http/2", "performance", "assets", "front-end"],
+  "authors": [
+    {
+      "name": "Tim Burt",
+      "email": "tim@dorset-digital.net"
+    }
+  ],
+  "require": {
+    "silverstripe/vendor-plugin": "^1.0",
+    "silverstripe/cms": "^4"
+  },
+  "license": "BSD-3-Clause",
+  "autoload": {
+    "psr-4": {
+      "DorsetDigital\\EnhancedRequirements\\": "src/"
+    }
+  },
+  "extra": {
+  },
+  "minimum-stability": "dev"
+}
