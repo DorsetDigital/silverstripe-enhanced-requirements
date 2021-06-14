@@ -10,6 +10,8 @@ _Note: This module is designed to provide a number of tools which may help to im
 ## Installation
 Install with `composer require dorsetdigital/silverstripe-enhanced-requirements`
 
+Once installed, the module will set the Requirements system to use the enhanced backend, but none of the additional features will be enabled by default. 
+
 ## Usage
 
 The module extends the standard `Requirements` methods, providing additional options.  Currently, three additional options are available, all taking a boolean value:
