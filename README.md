@@ -20,7 +20,7 @@ The module extends the standard `Requirements` methods, providing additional opt
 
 The module also adds the ability to pass options to the `ThemedCSS()` and `ThemedJavascript()` methods via a third parameter
 
-###inline
+### inline
 
 When this option is set, the framework will attempt to add the provided CSS or JS file as inline code rather than being loaded externally.   This allows developers to still build front-end assets with existing workflows, but inline the processed content where it is advantageous to do so:
 ```
@@ -31,7 +31,7 @@ Requirements::css('build/app.css', 'screen', ['inline' => true]);
 Requirements::javascript('build/app.js', ['inline' => true]);
 ```
 
-###preload
+### preload
 
 The preload option automatically adds `<link rel="preload">` tags to the markup to help improve the load order of important assets
 
@@ -43,7 +43,7 @@ This would result in the following tag being added to the markup:
 <link rel="preload" as="script" type="application/javascript" href="/build/critical.js?m=1623314562">
 ```
 
-###push
+### push
 
 The push option adds HTML link headers to the response.  On systems where this is supported, this will trigger a server push of the specified assets in order for them to be delivered even before the browser has completed parsing the document.
 
@@ -58,7 +58,7 @@ Link </build/bundle.css?m=1623314562>; rel=preload; as=style
 ```
 
 
-##Tag ordering
+## Tag ordering
 
 The module does not change the ordering of tags added via the `Requirements` API, nor does it change the signatures of the default class methods (with the exception of adding a third parameter to the themedCSS() and themedJavascript() methods) so should be a drop-in replacement for existing code.
 
