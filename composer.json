@@ -3,7 +3,7 @@
   "description": "Enhanced requirements for Silverstripe",
   "type": "silverstripe-vendormodule",
   "homepage": "https://github.com/DorsetDigital/silverstripe-enhanced-requirements",
-  "keywords": ["silverstripe", "html", "http/2", "performance", "assets", "front-end"],
+  "keywords": ["silverstripe", "html", "http2", "performance", "assets", "front-end"],
   "authors": [
     {
       "name": "Tim Burt",
