@@ -220,7 +220,7 @@ class Enhanced_Backend extends Requirements_Backend
             if ($type) {
                 $opts['type'] = $type;
             }
-            $this->javascript($path, array_merg($opts, $options));
+            $this->javascript($path, array_merge($opts, $options));
         } else {
             throw new InvalidArgumentException(
                 "The javascript file doesn't exist. Please check if the file $name.js exists in any "
