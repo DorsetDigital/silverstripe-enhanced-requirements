@@ -1,0 +1,6 @@
+---
+Name: enhanced-requirements
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\View\Requirements_Backend:
+    class: DorsetDigital\EnhancedRequirements\View\Enhanced_Backend
