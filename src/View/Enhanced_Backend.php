@@ -87,6 +87,9 @@ class Enhanced_Backend extends Requirements_Backend
             if (!empty($attributes['crossorigin'])) {
                 $htmlAttributes['crossorigin'] = $attributes['crossorigin'];
             }
+            if (!empty($attributes['nonce'])) {
+                $htmlAttributes['nonce'] = $attributes['nonce'];
+            }
             $jsRequirements .= HTML::createTag('script', $htmlAttributes);
             $jsRequirements .= "\n";
         }
@@ -369,13 +372,15 @@ class Enhanced_Backend extends Requirements_Backend
             $crossorigin = $options['crossorigin'] ?? null;
             $preload = $options['preload'] ?? null;
             $push = $options['push'] ?? null;
+            $nonce = $options['nonce'] ?? null;
 
             $this->javascript[$file] = [
                 'async' => $async,
                 'defer' => $defer,
                 'type' => $type,
                 'integrity' => $integrity,
-                'crossorigin' => $crossorigin
+                'crossorigin' => $crossorigin,
+                'nonce' => $nonce
             ];
 
             if ($preload === true) {
