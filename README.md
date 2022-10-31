@@ -14,13 +14,14 @@ Once installed, the module will set the Requirements system to use the enhanced 
 
 ## Usage
 
-The module extends the standard `Requirements` methods, providing additional options.  Currently, three additional options are available, all taking a boolean value:
+The module extends the standard `Requirements` methods, providing additional options.  Currently, these additional options are available:
 
 - inline
 - preload
 - push
+- nonce
 
-The module also adds the ability to pass options to the `ThemedCSS()` and `ThemedJavascript()` methods via a third parameter
+
 
 ### inline
 
@@ -58,6 +59,11 @@ Would result in an HTTP header similar to the following being added to the respo
 ```	
 Link </build/bundle.css?m=1623314562>; rel=preload; as=style 
 ```
+
+### nonce
+
+This adds the HTML 'nonce' attribute as required.  Can be useful for dealing with CSP implementations
+
 
 
 ## Tag ordering
