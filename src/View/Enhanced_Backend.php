@@ -2,6 +2,8 @@
 
 namespace DorsetDigital\EnhancedRequirements\View;
 
+use Exception;
+use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
