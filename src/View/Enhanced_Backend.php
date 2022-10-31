@@ -98,7 +98,7 @@ class Enhanced_Backend extends Requirements_Backend
         foreach ($this->getCustomScripts() as $script) {
             $jsRequirements .= HTML::createTag(
                 'script',
-                ['type' => 'application/javascript'],
+                [],
                 "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";
