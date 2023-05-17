@@ -11,16 +11,13 @@
     }
   ],
   "require": {
-    "silverstripe/vendor-plugin": "^1.0",
-    "silverstripe/cms": "^4"
+    "silverstripe/cms": "^4 || ^5"
   },
   "license": "BSD-3-Clause",
   "autoload": {
     "psr-4": {
       "DorsetDigital\\EnhancedRequirements\\": "src/"
     }
-  },
-  "extra": {
   },
   "minimum-stability": "dev"
 }
