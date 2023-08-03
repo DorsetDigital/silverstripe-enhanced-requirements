@@ -14,13 +14,16 @@ Once installed, the module will set the Requirements system to use the enhanced 
 
 ## Usage
 
-The module extends the standard `Requirements` methods, providing additional options.  Currently, these additional options are available:
+The module extends the standard `Requirements` methods, providing additional options.  Currently, these additional options are available for both CSS and JS files:
 
 - inline
 - preload
 - push
 - nonce
 
+The following option is also available for CSS files:
+
+- defer
 
 
 ### inline
@@ -64,6 +67,17 @@ Link </build/bundle.css?m=1623314562>; rel=preload; as=style
 
 This adds the HTML 'nonce' attribute as required.  Can be useful for dealing with CSP implementations
 
+
+### defer (css)
+
+If the defer option is added to a CSS inclusion, a tag will be injected into the head of the document which loads the specified CSS file after the page has loaded.  This can help to reduce page blocking for styles which are not needed for the initial rendering.
+In order to provide support for browsers which do not run javascript, a noscript tag is also added.
+The resultant output looks like this:
+
+```
+<link rel="preload" href="/path-to-file.css?m=1690972760" as="style" onload="this.onload=null;this.rel="stylesheet" />
+<noscript><link rel="stylesheet" href="/path-to-file.css?m=1690972760" /></noscript>
+```
 
 
 ## Tag ordering

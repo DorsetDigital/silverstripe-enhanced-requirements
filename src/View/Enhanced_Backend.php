@@ -2,7 +2,6 @@
 
 namespace DorsetDigital\EnhancedRequirements\View;
 
-use Exception;
 use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -262,14 +261,19 @@ class Enhanced_Backend extends Requirements_Backend
      * - 'preload' : (boolean) Add preload headers
      * - 'inline' : (boolean) Include this asset inline instead of loading
      * - 'push' : (boolean) add http headers to initiate http/2 push
+     * - 'defer' : (boolean) insert the CSS into the page using deferred loading
      */
     public function css($file, $media = null, $options = [])
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
         $inline = $options['inline'] ?? null;
+        $defer = $options['defer'] ?? null;
+
         if ($file && ($inline === true)) {
             $this->inlineCSS($file);
+        } else if ($file && ($defer === true)) {
+            $this->addDeferredCSS($file);
         } else {
             $integrity = $options['integrity'] ?? null;
             $crossorigin = $options['crossorigin'] ?? null;
@@ -302,6 +306,29 @@ class Enhanced_Backend extends Requirements_Backend
             }
 
         }
+    }
+
+    /**
+     * Adds CSS tags for deferred loading of a CSS file
+     * @param $file
+     * @return void
+     */
+    private function addDeferredCSS($file)
+    {
+        $tag = HTML::createTag('link', [
+            'rel' => 'preload',
+            'href' => $this->pathForFile($file),
+            'as' => 'style',
+            'onload' => "this.onload=null;this.rel='stylesheet'"
+        ], '');
+        $nsTag = HTML::createTag('noscript', [],
+            HTML::createTag('link', [
+                'rel' => 'stylesheet',
+                'href' => $this->pathForFile($file)
+            ])
+        );
+        self::insertHeadTags($tag);
+        self::insertHeadTags($nsTag);
     }
 
     /**
