@@ -1,14 +1,14 @@
 # silverstripe-enhanced-requirements
 
-Extends and enhances the Silverstripe requirements system, providing inlining of assets, http/2 server push, etc.
+Extends and enhances the Silverstripe requirements system, providing inlining of assets, http/2 server push, deferred css, etc.
 
 _Note: This module is designed to provide a number of tools which may help to improve the front-end performance of a website.  It is not an 'off-the-shelf' solution, and should be used carefully.  Just setting everything to preload or push, or inlining content without first analysing where and how it's used can lead to a reduction in performance!_
 
 ## Requirements
-*Silverstripe 4.x
+*Silverstripe 4.x / 5.x
 
 ## Installation
-Install with `composer require dorsetdigital/silverstripe-enhanced-requirements`
+Install with `composer require dorsetdigital/silverstripe-enhanced-requirements ^1`
 
 Once installed, the module will set the Requirements system to use the enhanced backend, but none of the additional features will be enabled by default. 
 
