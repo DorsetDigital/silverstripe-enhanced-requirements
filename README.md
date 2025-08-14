@@ -5,7 +5,8 @@ Extends and enhances the Silverstripe requirements system, providing inlining of
 _Note: This module is designed to provide a number of tools which may help to improve the front-end performance of a website.  It is not an 'off-the-shelf' solution, and should be used carefully.  Just setting everything to preload or push, or inlining content without first analysing where and how it's used can lead to a reduction in performance!_
 
 ## Requirements
-*Silverstripe 4.x / 5.x
+* Silverstripe 4.x / 5.x - Please use the V1 branch
+* Silverstripe 6.x - Currently in development
 
 ## Installation
 Install with `composer require dorsetdigital/silverstripe-enhanced-requirements ^1`
