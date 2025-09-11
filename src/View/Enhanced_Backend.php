@@ -29,6 +29,10 @@ class Enhanced_Backend extends Requirements_Backend
      */
     private $preload = [];
 
+    private array $customScriptAttributes = [];
+
+    private array $inlineCSSAttributes = [];
+
 
     /**
      * Update the given HTML content with the appropriate include tags for the registered
@@ -41,22 +45,15 @@ class Enhanced_Backend extends Requirements_Backend
      */
     public function includeInHTML($content)
     {
-        if (func_num_args() > 1) {
-            Deprecation::notice(
-                '5.0',
-                '$templateFile argument is deprecated. includeInHTML takes a sole $content parameter now.'
-            );
-            $content = func_get_arg(1);
-        }
-
         // Skip if content isn't injectable, or there is nothing to inject
-        $tagsAvailable = preg_match('#</head\b#', $content);
+        $tagsAvailable = preg_match('#</head\b#', $content ?? '');
         $hasFiles = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
         if (!$tagsAvailable || !$hasFiles) {
             return $content;
         }
         $requirements = '';
         $jsRequirements = '';
+
         $customTagsFirst = self::config()->get('custom_tags_first');
 
         if ($customTagsFirst) {
@@ -65,7 +62,6 @@ class Enhanced_Backend extends Requirements_Backend
             }
         }
 
-
         // Combine files - updates $this->javascript and $this->css
         $this->processCombinedFiles();
 
@@ -73,9 +69,10 @@ class Enhanced_Backend extends Requirements_Backend
         foreach ($this->getJavascript() as $file => $attributes) {
             // Build html attributes
             $htmlAttributes = [
-                'type' => isset($attributes['type']) ? $attributes['type'] : "application/javascript",
+                'type' => isset($attributes['type']) ? $attributes['type'] : null,
                 'src' => $this->pathForFile($file),
             ];
+
             if (!empty($attributes['async'])) {
                 $htmlAttributes['async'] = 'async';
             }
@@ -96,10 +93,17 @@ class Enhanced_Backend extends Requirements_Backend
         }
 
         // Add all inline JavaScript *after* including external files they might rely on
-        foreach ($this->getCustomScripts() as $script) {
+        foreach ($this->getCustomScripts() as $key => $script) {
+            // Build html attributes
+            $customHtmlAttributes = [];
+            if (isset($this->customScriptAttributes[$key])) {
+                foreach ($this->customScriptAttributes[$key] as $attrKey => $attrValue) {
+                    $customHtmlAttributes[$attrKey] = $attrValue;
+                }
+            }
             $jsRequirements .= HTML::createTag(
                 'script',
-                [],
+                $customHtmlAttributes,
                 "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";
@@ -121,13 +125,20 @@ class Enhanced_Backend extends Requirements_Backend
             if (!empty($params['crossorigin'])) {
                 $htmlAttributes['crossorigin'] = $params['crossorigin'];
             }
+            if (!empty($params['nonce'])) {
+                $htmlAttributes['nonce'] = $params['nonce'];
+            }
             $requirements .= HTML::createTag('link', $htmlAttributes);
             $requirements .= "\n";
         }
 
         // Literal custom CSS content
-        foreach ($this->getCustomCSS() as $css) {
-            $requirements .= HTML::createTag('style', ['type' => 'text/css'], "\n{$css}\n");
+        foreach ($this->getCustomCSS() as $idx => $css) {
+            $atts = [];
+            if ((isset($this->inlineCSSAttributes[$idx])) && (is_array($this->inlineCSSAttributes[$idx]))) {
+                $atts = $this->inlineCSSAttributes[$idx];
+            }
+            $requirements .= HTML::createTag('style', $atts, "\n{$css}\n");
             $requirements .= "\n";
         }
 
@@ -148,11 +159,9 @@ class Enhanced_Backend extends Requirements_Backend
         } else {
             $content = $this->insertTagsIntoHead($jsRequirements, $content);
         }
-
-        $this->addPreloadHeaders();
-
         return $content;
     }
+
 
     /**
      * @return void
@@ -236,15 +245,20 @@ class Enhanced_Backend extends Requirements_Backend
     /**
      * @param $file
      */
-    private function inlineCSS($file): void
+    private function inlineCSS($file, $options=[]): void
     {
         if (preg_match('{^(//)|(http[s]?:)}', $file) || Director::is_root_relative_url($file)) {
             //We can't inline this.. just add it to the stack without the inline options
-            $this->css($file);
+            $this->css($file, '', $options);
         } else {
             $path = Director::getAbsFile(ModuleResourceLoader::singleton()->resolvePath($file));
             if (is_file($path)) {
                 Requirements::customCSS(file_get_contents($path));
+                $styleIndex = count($this->customCSS) -1;
+                if (isset($options['inline'])) {
+                    unset($options['inline']);
+                }
+                $this->inlineCSSAttributes[] = $options;
             }
         }
     }
@@ -271,7 +285,7 @@ class Enhanced_Backend extends Requirements_Backend
         $defer = $options['defer'] ?? null;
 
         if ($file && ($inline === true)) {
-            $this->inlineCSS($file);
+            $this->inlineCSS($file, $options);
         } else if ($file && ($defer === true)) {
             $this->addDeferredCSS($file);
         } else {

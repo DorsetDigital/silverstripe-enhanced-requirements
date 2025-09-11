@@ -11,6 +11,7 @@
     }
   ],
   "require": {
+    "php": ">=8.2",
     "silverstripe/cms": "^6"
   },
   "license": "BSD-3-Clause",
