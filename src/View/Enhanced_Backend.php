@@ -23,6 +23,11 @@ class Enhanced_Backend extends Requirements_Backend
      * @var bool
      */
     private static $custom_tags_first = false;
+    /**
+     * @var bool
+     * @config
+     */
+    private static $use_external_css_defer = false;
 
     /**
      * @var array
@@ -287,7 +292,7 @@ class Enhanced_Backend extends Requirements_Backend
         if ($file && ($inline === true)) {
             $this->inlineCSS($file, $options);
         } else if ($file && ($defer === true)) {
-            $this->addDeferredCSS($file);
+            $this->addDeferredCSS($file, $options);
         } else {
             $integrity = $options['integrity'] ?? null;
             $crossorigin = $options['crossorigin'] ?? null;
@@ -327,19 +332,28 @@ class Enhanced_Backend extends Requirements_Backend
      * @param $file
      * @return void
      */
-    private function addDeferredCSS($file)
+    private function addDeferredCSS($file, $options)
     {
-        $tag = HTML::createTag('link', [
+        $tagAttributes = [
             'rel' => 'preload',
             'href' => $this->pathForFile($file),
             'as' => 'style',
-            'onload' => "this.onload=null;this.rel='stylesheet'"
-        ], '');
+            'data-defer-css' => true
+        ];
+        $nsTagAttributes = [
+            'rel' => 'stylesheet',
+            'href' => $this->pathForFile($file)
+        ];
+
+        if ((isset($options['nonce'])) && ($this->config()->get('use_external_css_defer') !== true)) {
+            $tagAttributes['nonce'] = $options['nonce'];
+            $nsTagAttributes['nonce'] = $options['nonce'];
+            $tagAttributes['onload'] = "this.onload=null;this.rel='stylesheet'";
+        }
+
+        $tag = HTML::createTag('link', $tagAttributes, '');
         $nsTag = HTML::createTag('noscript', [],
-            HTML::createTag('link', [
-                'rel' => 'stylesheet',
-                'href' => $this->pathForFile($file)
-            ])
+            HTML::createTag('link', $nsTagAttributes, '')
         );
         self::insertHeadTags($tag);
         self::insertHeadTags($nsTag);
