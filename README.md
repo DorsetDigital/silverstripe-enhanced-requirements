@@ -6,7 +6,7 @@ _Note: This module is designed to provide a number of tools which may help to im
 
 ## Requirements
 * Silverstripe 4.x / 5.x - Please use the V1 branch
-* Silverstripe 6.x - Currently in development
+* Silverstripe 6.x - Use the V2 branch
 
 ## Installation
 Install with `composer require dorsetdigital/silverstripe-enhanced-requirements ^1`
@@ -80,6 +80,29 @@ The resultant output looks like this:
 <noscript><link rel="stylesheet" href="/path-to-file.css?m=1690972760" /></noscript>
 ```
 
+### Deferred CSS and CSP
+
+Certain CSP rules may prevent the inline javascript used in deferring CSS from running.   In this case, you can set a configuration variable to remove the dependence on the inline script, and instead managed the deferred CSS functionality yourself in an external script.
+
+```yaml
+DorsetDigital\EnhancedRequirements\View\Enhanced_Backend:
+  use_external_css_defer: true
+```
+
+An example script is shown below:
+
+```javascript
+<script>
+    window.addEventListener("load", function() {
+        document.querySelectorAll('link[rel="preload"][as="style"][data-defer-css]')
+            .forEach(link => {
+                link.rel = "stylesheet";
+            });
+    });
+</script>
+```
+
+
 
 ## Tag ordering
 
@@ -90,7 +113,7 @@ Since this will affect any custom tags which have been added, not just the prelo
 
 To set the custom tags to be injected first, use the following in the site's yml config files:
 
-``` 
+```yaml
 DorsetDigital\EnhancedRequirements\View\Enhanced_Backend:
   custom_tags_first: true
 ```
