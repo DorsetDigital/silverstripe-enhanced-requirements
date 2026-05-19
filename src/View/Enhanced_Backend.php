@@ -140,8 +140,8 @@ class Enhanced_Backend extends Requirements_Backend
         // Literal custom CSS content
         foreach ($this->getCustomCSS() as $idx => $css) {
             $atts = [];
-            if ((isset($this->inlineCSSAttributes[$idx])) && (is_array($this->inlineCSSAttributes[$idx]))) {
-                $atts = $this->inlineCSSAttributes[$idx];
+            if ((isset($this->inlineCSSAttributes[$idx ?? ''])) && (is_array($this->inlineCSSAttributes[$idx ?? '']))) {
+                $atts = $this->inlineCSSAttributes[$idx ?? ''];
             }
             $requirements .= HTML::createTag('style', $atts, "\n{$css}\n");
             $requirements .= "\n";
@@ -299,7 +299,7 @@ class Enhanced_Backend extends Requirements_Backend
             $preload = $options['preload'] ?? null;
             $push = $options['push'] ?? null;
 
-            $this->css[$file] = [
+            $this->css[$file ?? ''] = [
                 "media" => $media,
                 "integrity" => $integrity,
                 "crossorigin" => $crossorigin
@@ -401,8 +401,8 @@ class Enhanced_Backend extends Requirements_Backend
         } else {
             // Get type
             $type = null;
-            if (isset($this->javascript[$file]['type'])) {
-                $type = $this->javascript[$file]['type'];
+            if (isset($this->javascript[$file ?? '']['type'])) {
+                $type = $this->javascript[$file ?? '']['type'];
             }
             if (isset($options['type'])) {
                 $type = $options['type'];
@@ -412,17 +412,17 @@ class Enhanced_Backend extends Requirements_Backend
             $async = (
                 isset($options['async']) && $options['async']
                 || (
-                    isset($this->javascript[$file])
-                    && isset($this->javascript[$file]['async'])
-                    && $this->javascript[$file]['async']
+                    isset($this->javascript[$file ?? ''])
+                    && isset($this->javascript[$file ?? '']['async'])
+                    && $this->javascript[$file ?? '']['async']
                 )
             );
             $defer = (
                 isset($options['defer']) && $options['defer']
                 || (
-                    isset($this->javascript[$file])
-                    && isset($this->javascript[$file]['defer'])
-                    && $this->javascript[$file]['defer']
+                    isset($this->javascript[$file ?? ''])
+                    && isset($this->javascript[$file ?? '']['defer'])
+                    && $this->javascript[$file ?? '']['defer']
                 )
             );
             $integrity = $options['integrity'] ?? null;
@@ -431,7 +431,7 @@ class Enhanced_Backend extends Requirements_Backend
             $push = $options['push'] ?? null;
             $nonce = $options['nonce'] ?? null;
 
-            $this->javascript[$file] = [
+            $this->javascript[$file ?? ''] = [
                 'async' => $async,
                 'defer' => $defer,
                 'type' => $type,
@@ -461,7 +461,7 @@ class Enhanced_Backend extends Requirements_Backend
 
             // Record scripts included in this file
             if (isset($options['provides'])) {
-                $this->providedJavascript[$file] = array_values($options['provides']);
+                $this->providedJavascript[$file ?? ''] = array_values($options['provides']);
             }
         }
 
